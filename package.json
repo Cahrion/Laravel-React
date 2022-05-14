@@ -19,6 +19,9 @@
         "react-dom": "^18.1.0"
     },
     "dependencies": {
-        "react-router-dom": "^6.3.0"
+        "formik": "^2.2.9",
+        "react-bootstrap": "^2.4.0",
+        "react-router-dom": "^6.3.0",
+        "yup": "^0.32.11"
     }
 }
