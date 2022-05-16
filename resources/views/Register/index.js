@@ -1,16 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 const Register = () => {
-    const handleSubmit = () => {
-        alert("Clicked");
+    
+    const [errors, setErrors] = useState([]);
+    const [error, setError] = useState("");
+
+    const handleSubmit = (values) => {
+        axios.post('/api/auth/register',{...values})
+        .then((res)=>{
+            if(res.data.success){
+                const userData = {
+                    id: res.data.id,
+                    name: res.data.name,
+                    email: res.data.email,
+                    access_token: res.data.access_token
+                };
+                const appState = {
+                    isLoggedIn: true,
+                    user: userData
+                };
+                alert("Login successful")
+            }else{
+                alert("Login failed");
+            }
+        })
+        .catch(error => {
+            if(error.response){
+                let err = error.response.data;
+                setErrors(err.errors);
+            }
+            else if(error.request){
+                let err = error.request;
+                setError(err);
+            }
+            else {
+                setError(error.message);
+                alert(err.message);
+            }
+        })
     };
+    let arr = [];
+    Object.values(errors).forEach(value => {
+        arr.push(value)
+    });
     return (
         <div className='login-register-container'>
             <form className="form-signin">
                 <img className="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
                 <h1 className="h3 mb-3 font-weight-normal">Register</h1>
+                {
+                    arr.length != 0 && arr.map((item) => (<p>{item}</p>))
+                }
+                {
+                    error != '' && (<p>{error}</p>)
+                }
                 <Formik initialValues={{
                     name: '',
                     email: '',
