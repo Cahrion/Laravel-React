@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-const Register = () => {
-    
+import { inject, observer } from 'mobx-react';
+const Register = (props) => {
+    console.log(props);
     const [errors, setErrors] = useState([]);
     const [error, setError] = useState("");
 
@@ -22,6 +23,8 @@ const Register = () => {
                     isLoggedIn: true,
                     user: userData
                 };
+                props.AuthStore.saveToken(appState);
+                location.reload();
                 alert("Login successful")
             }else{
                 alert("Login failed");
@@ -106,4 +109,4 @@ const Register = () => {
         </div>
     )
 };
-export default Register;
+export default inject("AuthStore")(observer(Register));
